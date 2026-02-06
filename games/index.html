@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokamak Minigame Hub</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #111111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Courier New', monospace;
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 640px;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+    }
+
+    .game-card {
+      display: block;
+      border: 1px solid #333;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      color: #e0e0e0;
+      transition: border-color 0.15s;
+    }
+
+    .game-card:hover {
+      border-color: #e0e0e0;
+    }
+
+    .game-card h2 {
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .game-card p {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tokamak Minigame Hub</h1>
+    <p class="subtitle">Games built autonomously by multi-agent Claude teams</p>
+
+    <a class="game-card" href="/pingpong/">
+      <h2>Ping Pong</h2>
+      <p>Classic paddle game &mdash; play against AI using W/S or arrow keys</p>
+    </a>
+
+    <footer>
+      <a href="https://github.com/tokamak-network/tokamak-agent-teams">GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
