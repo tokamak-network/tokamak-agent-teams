@@ -14,6 +14,9 @@ Inspired by Anthropic's [**"How we built a C compiler using Claude as our coding
 4. Implement → test → commit → push, on repeat
 5. Real-time dashboard at `http://localhost:3000` to monitor progress
 
+<img width="1728" height="1117" alt="image" src="https://github.com/user-attachments/assets/ee93bcde-c98a-421a-a5f3-76f99f4cde17" />
+
+
 ## Quick Start
 
 ```bash
