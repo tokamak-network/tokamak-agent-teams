@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{GAME_NAME}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Courier New', monospace;
+      color: #e0e0e0;
+    }
+
+    #game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: #00d4ff;
+    }
+
+    #game-canvas {
+      border: 2px solid #00d4ff;
+      background: #0a0a1a;
+    }
+
+    #score-display {
+      font-size: 18px;
+      color: #00d4ff;
+    }
+
+    #status {
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>{{GAME_NAME}}</h1>
+    <canvas id="game-canvas" width="400" height="600"></canvas>
+    <div id="score-display">Score: 0</div>
+    <div id="status">Press any key to start</div>
+  </div>
+
+  <script src="game.js"></script>
+  <script src="renderer.js"></script>
+  <script src="input.js"></script>
+  <script>
+    // Game initialization
+    (function() {
+      const canvas = document.getElementById('game-canvas');
+      const scoreDisplay = document.getElementById('score-display');
+      const statusDisplay = document.getElementById('status');
+
+      // Initialize modules
+      const game = typeof createGame === 'function' ? createGame() : null;
+      const renderer = typeof createRenderer === 'function' ? createRenderer(canvas) : null;
+
+      if (!game || !renderer) {
+        statusDisplay.textContent = 'Game modules loading...';
+        return;
+      }
+
+      // Setup input
+      if (typeof setupInput === 'function') {
+        setupInput(function(action) {
+          if (game && typeof updateGame === 'function') {
+            updateGame(game, action);
+          }
+        });
+      }
+
+      // Game loop
+      let lastTime = 0;
+      function gameLoop(timestamp) {
+        const delta = timestamp - lastTime;
+        lastTime = timestamp;
+
+        if (game && typeof updateGame === 'function') {
+          updateGame(game, { type: 'tick', delta: delta });
+        }
+
+        if (renderer && typeof render === 'function') {
+          render(renderer, game);
+        }
+
+        // Update UI
+        if (game.score !== undefined) {
+          scoreDisplay.textContent = 'Score: ' + game.score;
+        }
+
+        if (typeof isGameOver === 'function' && isGameOver(game)) {
+          statusDisplay.textContent = 'Game Over! Press R to restart';
+        } else {
+          statusDisplay.textContent = '';
+        }
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    })();
+  </script>
+</body>
+</html>
