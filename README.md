@@ -1,7 +1,5 @@
 # Tokamak Agent Teams
 
-> **Live Demo:** [Play Ping Pong →](https://tokamak-agent-teams.vercel.app/pingpong/)
-
 Inspired by Anthropic's [**"How we built a C compiler using Claude as our coding agent"**](https://www.anthropic.com/engineering/building-c-compiler), this project applies the same multi-agent approach to building mini-games autonomously.
 
 ## Key Principles
@@ -36,6 +34,7 @@ Each agent runs Claude CLI in a 5-second loop. On every iteration, it syncs with
 
 <img width="1728" height="1117" alt="image" src="https://github.com/user-attachments/assets/ee93bcde-c98a-421a-a5f3-76f99f4cde17" />
 
+> **See the result:** [Play Ping Pong →](https://tokamak-agent-teams.vercel.app/pingpong/)
 
 ## Quick Start
 
