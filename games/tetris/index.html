@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tetris</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Courier New', monospace;
+      color: #e0e0e0;
+    }
+
+    #game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: #00d4ff;
+    }
+
+    #game-canvas {
+      border: 2px solid #00d4ff;
+      background: #0a0a1a;
+    }
+
+    #score-display {
+      font-size: 18px;
+      color: #00d4ff;
+    }
+
+    #status {
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>Tetris</h1>
+    <canvas id="game-canvas" width="480" height="640"></canvas>
+    <div id="score-display">Score: 0</div>
+    <div id="status">Press any key to start</div>
+  </div>
+
+  <script src="pieces.js"></script>
+  <script src="board.js"></script>
+  <script src="bag.js"></script>
+  <script src="scoring.js"></script>
+  <script src="game.js"></script>
+  <script src="renderer.js"></script>
+  <script src="input.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
