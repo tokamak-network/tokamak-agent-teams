@@ -34,7 +34,12 @@ Each agent runs Claude CLI in a 5-second loop. On every iteration, it syncs with
 
 <img width="1728" height="1117" alt="image" src="https://github.com/user-attachments/assets/ee93bcde-c98a-421a-a5f3-76f99f4cde17" />
 
-> **See the result:** [Play Ping Pong →](https://tokamak-agent-teams.vercel.app/pingpong/)
+## Games
+
+| Game | Description | Play |
+|------|-------------|------|
+| Ping Pong | Classic paddle game — play against AI | [Play](https://tokamak-agent-teams.vercel.app/pingpong/) |
+| Tetris | Block-stacking puzzle game | [Play](https://tokamak-agent-teams.vercel.app/tetris/) |
 
 ## Quick Start
 
