@@ -132,13 +132,13 @@ function createBoard() {
         grid.splice(rowIndex, 1);
       }
 
-      // Add empty rows at top (all at once after removal)
+      // Add empty rows at top (high Y = top of board)
       for (let i = 0; i < clearedRows.length; i++) {
         const emptyRow = [];
         for (let x = 0; x < BOARD_WIDTH; x++) {
           emptyRow[x] = null;
         }
-        grid.unshift(emptyRow);
+        grid.push(emptyRow);
       }
     }
 

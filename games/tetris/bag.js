@@ -13,18 +13,18 @@
  * - Bag.reset(): reinitializes the bag
  */
 
-// Import PIECE_TYPES from pieces.js (or define locally for testing)
-let PIECE_TYPES = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
+// Use PIECE_TYPES from pieces.js (available globally in browser, imported in Node.js)
+var BAG_PIECE_TYPES = (typeof PIECE_TYPES !== 'undefined') ? PIECE_TYPES : ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 
 // Try to import from pieces.js if in Node.js environment
 if (typeof require !== 'undefined' && typeof module !== 'undefined') {
   try {
     const pieces = require('./pieces.js');
     if (pieces && pieces.PIECE_TYPES) {
-      PIECE_TYPES = pieces.PIECE_TYPES;
+      BAG_PIECE_TYPES = pieces.PIECE_TYPES;
     }
   } catch (e) {
-    // Use default PIECE_TYPES defined above
+    // Use default BAG_PIECE_TYPES defined above
   }
 }
 
@@ -47,7 +47,7 @@ function shuffle(array) {
  * @returns {Array} Shuffled array of piece type strings
  */
 function createShuffledBag() {
-  return shuffle([...PIECE_TYPES]);
+  return shuffle([...BAG_PIECE_TYPES]);
 }
 
 /**

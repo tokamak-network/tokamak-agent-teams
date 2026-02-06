@@ -39,7 +39,7 @@ const LEFT_PANEL_X = PLAYFIELD_X - LEFT_PANEL_WIDTH - 10;
 const RIGHT_PANEL_X = PLAYFIELD_X + PLAYFIELD_PIXEL_WIDTH + 10;
 
 // Color palette (as per spec)
-const COLORS = {
+const UI_COLORS = {
   BACKGROUND: '#0a0a0a',
   PLAYFIELD_BG: '#1a1a2e',
   GRID_LINES: '#16213e',
@@ -129,11 +129,11 @@ function createRenderer(canvas) {
    */
   function drawPlayfield(grid) {
     // Background
-    ctx.fillStyle = COLORS.PLAYFIELD_BG;
+    ctx.fillStyle = UI_COLORS.PLAYFIELD_BG;
     ctx.fillRect(PLAYFIELD_X, PLAYFIELD_Y, PLAYFIELD_PIXEL_WIDTH, PLAYFIELD_PIXEL_HEIGHT);
 
     // Grid lines
-    ctx.strokeStyle = COLORS.GRID_LINES;
+    ctx.strokeStyle = UI_COLORS.GRID_LINES;
     ctx.lineWidth = 1;
 
     for (let x = 0; x <= PLAYFIELD_WIDTH; x++) {
@@ -152,10 +152,10 @@ function createRenderer(canvas) {
       ctx.stroke();
     }
 
-    // Draw locked blocks (only visible rows: 0-19, which map to grid rows 2-21)
+    // Draw locked blocks (visible grid rows 0-19, flipped so high Y = screen top)
     if (grid) {
       for (let y = 0; y < PLAYFIELD_HEIGHT; y++) {
-        const gridY = y + 2; // Offset to skip hidden rows
+        const gridY = PLAYFIELD_HEIGHT - 1 - y; // Flip: screen y=0 → row 19 (top), y=19 → row 0 (bottom)
         if (!grid[gridY]) continue;
 
         for (let x = 0; x < PLAYFIELD_WIDTH; x++) {
@@ -190,9 +190,9 @@ function createRenderer(canvas) {
       const blockX = piece.x + shape[i][0];
       const blockY = piece.y + shape[i][1];
 
-      // Only draw if within visible area (rows 2-21 map to screen rows 0-19)
-      if (blockY >= 2 && blockY < 22) {
-        const screenY = blockY - 2;
+      // Only draw if within visible area (rows 0-19)
+      if (blockY >= 0 && blockY < PLAYFIELD_HEIGHT) {
+        const screenY = PLAYFIELD_HEIGHT - 1 - blockY; // Flip Y
         const px = PLAYFIELD_X + blockX * BLOCK_SIZE;
         const py = PLAYFIELD_Y + screenY * BLOCK_SIZE;
 
@@ -262,7 +262,7 @@ function createRenderer(canvas) {
     const panelY = PLAYFIELD_Y;
 
     // Label
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.font = '12px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('HOLD', panelX + LEFT_PANEL_WIDTH / 2, panelY + 15);
@@ -270,7 +270,7 @@ function createRenderer(canvas) {
     // Preview box
     const boxY = panelY + 25;
     const boxHeight = 60;
-    ctx.strokeStyle = COLORS.GRID_LINES;
+    ctx.strokeStyle = UI_COLORS.GRID_LINES;
     ctx.lineWidth = 1;
     ctx.strokeRect(panelX, boxY, LEFT_PANEL_WIDTH, boxHeight);
 
@@ -289,7 +289,7 @@ function createRenderer(canvas) {
     const panelY = PLAYFIELD_Y;
 
     // Label
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.font = '12px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('NEXT', panelX + RIGHT_PANEL_WIDTH / 2, panelY + 15);
@@ -303,7 +303,7 @@ function createRenderer(canvas) {
         const boxY = panelY + 25 + i * (boxHeight + spacing);
 
         // Preview box
-        ctx.strokeStyle = COLORS.GRID_LINES;
+        ctx.strokeStyle = UI_COLORS.GRID_LINES;
         ctx.lineWidth = 1;
         ctx.strokeRect(panelX, boxY, RIGHT_PANEL_WIDTH, boxHeight);
 
@@ -321,7 +321,7 @@ function createRenderer(canvas) {
     const panelX = RIGHT_PANEL_X;
     const panelY = PLAYFIELD_Y + 200;
 
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.font = '14px "Press Start 2P", monospace';
     ctx.textAlign = 'left';
 
@@ -329,23 +329,23 @@ function createRenderer(canvas) {
     const lineHeight = 25;
 
     // Score
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.fillText('SCORE', panelX, y);
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.fillText(stats.score || 0, panelX, y + lineHeight);
     y += lineHeight * 2 + 10;
 
     // Level
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.fillText('LEVEL', panelX, y);
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.fillText(stats.level || 1, panelX, y + lineHeight);
     y += lineHeight * 2 + 10;
 
     // Lines
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.fillText('LINES', panelX, y);
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.fillText(stats.lines || 0, panelX, y + lineHeight);
   }
 
@@ -397,7 +397,7 @@ function createRenderer(canvas) {
     ctx.fillStyle = '#ffffff';
 
     for (let i = 0; i < animations.lineClear.rows.length; i++) {
-      const screenY = animations.lineClear.rows[i] - 2; // Convert to screen coordinates
+      const screenY = PLAYFIELD_HEIGHT - 1 - animations.lineClear.rows[i]; // Flip Y
       if (screenY >= 0 && screenY < PLAYFIELD_HEIGHT) {
         const py = PLAYFIELD_Y + screenY * BLOCK_SIZE;
         ctx.fillRect(PLAYFIELD_X, py, PLAYFIELD_PIXEL_WIDTH, BLOCK_SIZE);
@@ -420,10 +420,10 @@ function createRenderer(canvas) {
     ctx.globalAlpha = alpha;
     ctx.fillStyle = animations.hardDrop.color;
 
-    const startScreenY = animations.hardDrop.startY - 2;
-    const endScreenY = animations.hardDrop.endY - 2;
+    const startScreenY = PLAYFIELD_HEIGHT - 1 - animations.hardDrop.startY; // Flip Y
+    const endScreenY = PLAYFIELD_HEIGHT - 1 - animations.hardDrop.endY;
 
-    if (startScreenY >= 0 && endScreenY < PLAYFIELD_HEIGHT) {
+    if (startScreenY < PLAYFIELD_HEIGHT && endScreenY >= 0) {
       const px = PLAYFIELD_X + animations.hardDrop.x * BLOCK_SIZE;
       const py1 = PLAYFIELD_Y + Math.max(0, startScreenY) * BLOCK_SIZE;
       const py2 = PLAYFIELD_Y + Math.min(PLAYFIELD_HEIGHT - 1, endScreenY) * BLOCK_SIZE + BLOCK_SIZE;
@@ -461,8 +461,8 @@ function createRenderer(canvas) {
       const blockX = piece.x + shape[i][0];
       const blockY = piece.y + shape[i][1];
 
-      if (blockY >= 2 && blockY < 22) {
-        const screenY = blockY - 2;
+      if (blockY >= 0 && blockY < PLAYFIELD_HEIGHT) {
+        const screenY = PLAYFIELD_HEIGHT - 1 - blockY; // Flip Y
         const px = PLAYFIELD_X + blockX * BLOCK_SIZE;
         const py = PLAYFIELD_Y + screenY * BLOCK_SIZE;
 
@@ -507,12 +507,12 @@ function createRenderer(canvas) {
     }
 
     // Clear canvas
-    ctx.fillStyle = COLORS.BACKGROUND;
+    ctx.fillStyle = UI_COLORS.BACKGROUND;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     if (!state) {
       // No state, show placeholder
-      ctx.fillStyle = COLORS.TEXT;
+      ctx.fillStyle = UI_COLORS.TEXT;
       ctx.font = '16px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
       ctx.fillText('Loading...', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
@@ -530,7 +530,7 @@ function createRenderer(canvas) {
         x: state.activePiece.x,
         y: state.ghostY
       };
-      drawPiece(ghostPiece, COLORS.GHOST_ALPHA);
+      drawPiece(ghostPiece, UI_COLORS.GHOST_ALPHA);
     }
 
     // Draw active piece
@@ -554,16 +554,16 @@ function createRenderer(canvas) {
    * Render start/menu screen
    */
   function renderMenu() {
-    ctx.fillStyle = COLORS.BACKGROUND;
+    ctx.fillStyle = UI_COLORS.BACKGROUND;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.font = '32px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('TETRIS', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 40);
 
     ctx.font = '16px monospace';
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.fillText('Press any key to start', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 20);
   }
 
@@ -575,13 +575,13 @@ function createRenderer(canvas) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.font = '32px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('PAUSED', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 
     ctx.font = '14px "Press Start 2P", monospace';
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.fillText('Press ESC or P to resume', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 40);
   }
 
@@ -594,14 +594,14 @@ function createRenderer(canvas) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    ctx.fillStyle = COLORS.TEXT;
+    ctx.fillStyle = UI_COLORS.TEXT;
     ctx.font = '32px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('GAME OVER', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 60);
 
     if (stats) {
       ctx.font = '16px "Press Start 2P", monospace';
-      ctx.fillStyle = COLORS.TEXT_GRAY;
+      ctx.fillStyle = UI_COLORS.TEXT_GRAY;
       let y = CANVAS_HEIGHT / 2;
 
       ctx.fillText('Score: ' + (stats.score || 0), CANVAS_WIDTH / 2, y);
@@ -612,7 +612,7 @@ function createRenderer(canvas) {
     }
 
     ctx.font = '14px "Press Start 2P", monospace';
-    ctx.fillStyle = COLORS.TEXT_GRAY;
+    ctx.fillStyle = UI_COLORS.TEXT_GRAY;
     ctx.fillText('Press ENTER to restart', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 100);
   }
 
