@@ -124,7 +124,7 @@ Each agent container:
 ## Project Structure
 
 ```
-tokamak-minigame-hub/
+tokamak-agent-teams/
 ├── forge.sh                  # Bootstrap script
 ├── docker/
 │   ├── Dockerfile            # Agent container image
